@@ -1,0 +1,27 @@
+import "dotenv/config";
+import "./db.js";
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
+import morgan from "morgan";
+import { config } from "./config.js";
+import { sequelize } from "./db.js";
+
+const app = express();
+const logger = morgan("deb");
+
+
+app.use(cors());
+app.use(logger);
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+sequelize.sync().then(() => {
+    console.log("mysql is connecting");
+    app.listen(config.port, () => {
+        console.log(`http://localhost:${config.host.port}`);
+    });
+});
+
+export default app;
