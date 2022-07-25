@@ -8,7 +8,7 @@ import { config } from "./config.js";
 import { sequelize } from "./db.js";
 
 const app = express();
-const logger = morgan("deb");
+const logger = morgan("dev");
 
 
 app.use(cors());

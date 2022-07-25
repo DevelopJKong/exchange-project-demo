@@ -1,10 +1,10 @@
 import { sequelize } from "../db.js";
 import SQ from "sequelize";
-import { Verification } from "./Verification.js";
+import { User } from "./User.js";
 const DataTypes = SQ.DataTypes;
 
-export const User = sequelize.define(
-  "user",
+export const Verification = sequelize.define(
+  "verification",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -12,26 +12,12 @@ export const User = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    username: {
-      type: DataTypes.STRING(45),
-      allowNull: false,
-    },
-    password: {
+    code: {
       type: DataTypes.STRING(128),
       allowNull: false,
     },
-    name: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-      unique: true,
-    },
-    email: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-      unique: true,
-    },
-    verified: {
-      type: DataTypes.BOOLEAN(false),
+    user_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     createdAt: {
@@ -50,9 +36,6 @@ export const User = sequelize.define(
   { timestamps: false }
 );
 
-User.hasMany(Verification, {
-    foreignKey: 'user_id',
-    allowNull: false,
-    constraints: true,
-    onDelete: 'cascade'
+Verification.belongsTo(User, {
+    foreignKey: 'user_id'
 });
