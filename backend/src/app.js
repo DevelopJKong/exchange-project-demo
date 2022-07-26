@@ -13,7 +13,6 @@ import userRouter from "./routers/userRouter.js";
 
 const app = express();
 const logger = morgan("dev");
-const __dirname = path.resolve();
 app.use(cors());
 app.use(logger);
 app.use(bodyParser.json());
@@ -21,15 +20,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// if (process.env.MODE === "development") {
-//     const openAPIDocument = yaml.load(
-//       path.join(process.cwd(), "/swagger/swagger.yaml")
-//     );
-//     app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openAPIDocument));
-// }
+if (process.env.MODE === "development") {
+    const openAPIDocument = yaml.load(
+      path.join(process.cwd(), "/src/swagger/swagger.yaml")
+    );
+    app.use("/api/api-docs", swaggerUi.serve, swaggerUi.setup(openAPIDocument));
+}
 
 // Routers
-app.use("/users",userRouter);
+app.use("/api/users",userRouter);
 
 
 sequelize.sync().then(() => {
