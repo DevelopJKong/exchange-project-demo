@@ -17,6 +17,10 @@ export const postJoin = async (req, res) => {
         }
 
         const hashPassword = await bcrypt.hash(password, 10);
+
+
+        // 신분증 인증,,계좌 1원 인증, 이메일 인증
+
         const userId = await User.create({
             username,
             password: hashPassword,
