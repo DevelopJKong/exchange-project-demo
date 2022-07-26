@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { login } from "../redux/apiCall";
-import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { publicRequest } from "../requestMethods";
 
 const Form = styled.form``;
 const Input = styled.input``;
@@ -11,34 +11,61 @@ const Button = styled.button``;
 const Error = styled.div``;
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm();
   const dispatch = useDispatch();
-  const { isFetching, error } = useSelector((state) => state.user);
-  const handleClick = (event) => {
-    event.preventDefault();
-    login(dispatch, { email, password });
+  const onValid = async (data) => {
+    const { email, password } = data;
+    try {
+      const userData = await publicRequest.post("/users/login", {
+        email,
+        password,
+      });
+
+      if (userData) {
+        return login(dispatch, {
+          email,
+          password,
+        });
+      }
+    } catch (error) {
+      setError("extraError", { message: "이메일이나 비밀번호가 다릅니다" });
+      console.log(error);
+    }
   };
+
   return (
-    <Form>
+    <Form onSubmit={handleSubmit(onValid)}>
       <Input
         placeholder="email"
-        type="email"
-        onChange={(e) => setEmail(e.target.value)}
+        type="text"
+        {...register("email", {
+          required: {
+            value: true,
+            message: "필수값입니다",
+          },
+          minLength: { value: 5, message: "Your email is too short" },
+        })}
       />
       <Input
         placeholder="password"
         type="password"
-        onChange={(e) => setPassword(e.target.value)}
+        {...register("password", {
+          required: {
+            value: true,
+            message: "필수값입니다",
+          },
+          minLength: { value: 4, message: "Your password is too short" },
+        })}
       />
-      <Button onClick={handleClick} disabled={isFetching}>
-        LOGIN
-      </Button>
-      {error && <Error>이메일이나 패스워드가 잘 못 되었습니다</Error>}
-      <br />
-      <Link to={`/`}>DO NOT YOU REMEMBER THE PASSWORD?</Link>
-      <br />
-      <Link to={`/login`}>CREATE A NEW ACCOUNT</Link>
+      <Button>LOGIN</Button>
+      <Error>{errors?.username?.message}</Error>
+      <Error>{errors?.password?.message}</Error>
+      <Error>{errors?.extraError?.message}</Error>
     </Form>
   );
 };
