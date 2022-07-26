@@ -22,7 +22,7 @@ export const config = {
         port: required('DB_PORT')
     },
     bcrypt: {
-        saltRounds:required('BCRYPT_SALT_ROUNDS','10')
+        saltRounds:required('BCRYPT_SALT_ROUNDS',10)
     }
 
 }

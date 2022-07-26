@@ -36,6 +36,3 @@ export const Verification = sequelize.define(
   { timestamps: false }
 );
 
-Verification.belongsTo(User, {
-    foreignKey: 'user_id'
-});

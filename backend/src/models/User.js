@@ -50,9 +50,13 @@ export const User = sequelize.define(
   { timestamps: false }
 );
 
+//관계 설정
 User.hasMany(Verification, {
     foreignKey: 'user_id',
     allowNull: false,
     constraints: true,
     onDelete: 'cascade'
+});
+Verification.belongsTo(User, {
+  foreignKey: 'user_id'
 });
