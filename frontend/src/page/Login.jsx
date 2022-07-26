@@ -34,8 +34,10 @@ const Login = () => {
       <Button onClick={handleClick} disabled={isFetching}>
         LOGIN
       </Button>
-      {error && <Error>Something is wrong...</Error>}
+      {error && <Error>이메일이나 패스워드가 잘 못 되었습니다</Error>}
+      <br />
       <Link to={`/`}>DO NOT YOU REMEMBER THE PASSWORD?</Link>
+      <br />
       <Link to={`/login`}>CREATE A NEW ACCOUNT</Link>
     </Form>
   );

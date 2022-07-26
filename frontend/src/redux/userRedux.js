@@ -19,11 +19,14 @@ const userSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
-    logOut: () => {
-        localStorage.clear();
-    }
+    logOutSuccess: (state) => {
+      state.currentUser = null;
+      state.isFetching = false;
+      state.error = false;
+    },
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure,logOut } = userSlice.actions;
+export const { loginStart, loginSuccess, loginFailure, logOutSuccess } =
+  userSlice.actions;
 export default userSlice.reducer;
