@@ -15,6 +15,7 @@ const Login = () => {
         register,
         handleSubmit,
         setError,
+        clearErrors,
         formState: { errors },
     } = useForm();
     const setLoginSuccess = useSetRecoilState(loginSuccessState);
@@ -22,33 +23,33 @@ const Login = () => {
 
     const onValid = async (data) => {
         try {
-            const userData = await axios(`http://localhost:5000/api/users/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                data: JSON.stringify(data),
-            });
-
+            const userData = await (
+                await fetch(`http://localhost:5000/api/users/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                })
+            ).json();
             if (userData.message === "이메일이나 비밀번호가 틀렸습니다") {
                 throw Error;
             }
-
-            return setLoginSuccess({
-                currentUser: userData.data.email,
-                token: userData.data.token,
+            setLoginSuccess({
+                currentUser: userData.email,
+                token: userData.token,
                 isFetching: false,
                 error: false,
                 expire: Date.now(),
             });
         } catch (error) {
             setError("extraError", { message: "이메일이나 비밀번호가 틀렸습니다" });
-            return setLoginFailure(loginFailure);
+            setLoginFailure(loginFailure);
         }
     };
 
     return (
-        <Form onSubmit={handleSubmit(onValid)}>
+        <Form onSubmit={handleSubmit(onValid)} onClick={() => clearErrors()}>
             <Input
                 placeholder="email"
                 type="text"
@@ -71,7 +72,7 @@ const Login = () => {
                     minLength: { value: 4, message: "Your password is too short" },
                 })}
             />
-            <Button>LOGIN</Button>
+            <Button >LOGIN</Button>
             <Error>{errors?.username?.message}</Error>
             <Error>{errors?.password?.message}</Error>
             <Error>{errors?.extraError?.message}</Error>

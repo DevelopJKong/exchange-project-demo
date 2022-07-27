@@ -3,6 +3,7 @@ import { useRecoilValue } from "recoil";
 import { loginSuccessState } from "./atoms";
 import Home from "./page/Home";
 import Login from "./page/Login";
+import Register from "./page/Register";
 
 const Router = () => {
     const login = useRecoilValue(loginSuccessState);
@@ -16,6 +17,7 @@ const Router = () => {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={login?.currentUser ? <Navigate to="/" /> : <Login />} />
+                <Route path="/join" element={<Register />} />
             </Routes>
         </BrowserRouter>
     );
