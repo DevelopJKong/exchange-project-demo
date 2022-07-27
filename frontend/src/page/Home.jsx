@@ -1,19 +1,15 @@
-import { useDispatch, useSelector } from "react-redux";
-import { logOut } from "../redux/userRedux";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { loginSuccessState, logOutState } from "../atoms";
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state?.user?.currentUser);
-  const handleLogOut = (event) => {
-    event.preventDefault();
-    dispatch(logOut());
-  };
-  return (
-    <>
-      <div>{user ? "Welcome" : "Home"}</div>
-      <button onClick={handleLogOut}>LogOut</button>
-    </>
-  );
+    const [login, setLogin] = useRecoilState(loginSuccessState);
+    const logout = useRecoilValue(logOutState);
+    return (
+        <>
+            <div>{login?.currentUser ? "Welcome" : "Home"}</div>
+            <button onClick={() => setLogin(logout)}>LogOut</button>
+        </>
+    );
 };
 
 export default Home;
