@@ -48,6 +48,6 @@
             "last 1 safari version"
         ]
     },
-    "proxy": "http://localhost:5000",
-    "homepage": "https://developjkong.github.io/exchange-project-demo"
+    "proxy": "http://localhost:5000"
+    
 }
