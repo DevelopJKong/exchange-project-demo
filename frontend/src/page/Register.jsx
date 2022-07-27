@@ -107,6 +107,7 @@ const Register = () => {
             <Error>{errors?.password?.message}</Error>
             <Error>{errors?.confirmation_password?.message}</Error>
             <Error>{errors?.username?.message}</Error>
+            <Error>{errors?.name?.message}</Error>
             <Error>{errors?.diffPassword?.message}</Error>
             <Error>{errors?.extraServerError?.message}</Error>
         </Form>

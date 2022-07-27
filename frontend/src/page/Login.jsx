@@ -72,7 +72,7 @@ const Login = () => {
                     minLength: { value: 4, message: "Your password is too short" },
                 })}
             />
-            <Button >LOGIN</Button>
+            <Button>LOGIN</Button>
             <Error>{errors?.username?.message}</Error>
             <Error>{errors?.password?.message}</Error>
             <Error>{errors?.extraError?.message}</Error>
