@@ -4,10 +4,12 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { BASE_URL, emailChecker } from "../apiCall";
+
 const Form = styled.form``;
 const Input = styled.input``;
 const Button = styled.button``;
 const Error = styled.div``;
+const Success = styled.div``;
 
 const Register = () => {
     const {
@@ -55,7 +57,6 @@ const Register = () => {
         try {
             const checkInfo = await emailChecker(email.value);
             setIsCheck(true);
-            setError("checkEmailSuccess", { message: checkInfo.data.message });
         } catch (error) {
             const { message } = error;
             switch (message) {
@@ -85,9 +86,11 @@ const Register = () => {
                     },
                 })}
             />
+
             <Button type="button" onClick={handleClick}>
                 중복 확인
             </Button>
+            
             <Input
                 placeholder="비밀번호를 입력하여 주세요."
                 type="password"
@@ -138,7 +141,7 @@ const Register = () => {
             <br />
             <Link to="/login">Login</Link>
             <br />
-            <Error>{errors?.checkEmailSuccess?.message}</Error>
+            <Success></Success>
             <Error>{errors?.email?.message}</Error>
             <Error>{errors?.checkEmail?.message}</Error>
             <Error>{errors?.password?.message}</Error>
