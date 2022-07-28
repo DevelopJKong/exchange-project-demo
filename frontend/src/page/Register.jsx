@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { emailChecker, userRequest } from "../apiCall";
+import { emailChecker, userRequest } from "../requestMethod";
 
 const Register = () => {
   const {
@@ -38,6 +38,7 @@ const Register = () => {
       }
     }
   };
+  
   const handleClick = async () => {
     const email = document.getElementById("email");
     try {

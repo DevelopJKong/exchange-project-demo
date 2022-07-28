@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { loginFailureState, loginSuccessState } from "../atoms";
-import { userRequest } from "../apiCall";
+import { userRequest } from "../requestMethod";
 
 const Login = () => {
   const {
