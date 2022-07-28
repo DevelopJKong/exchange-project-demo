@@ -100,7 +100,7 @@ export const postLogin = async (req, res) => {
     try {
         const user = await User.findOne({ where: { email } });
         if (!user) {
-            return res.status(401).json({ message: "이메일이나 비밀번호가 틀렸습니다" });
+            return res.status(200).json({ message: "존재하는 계정이 없습니다" });
         }
 
         const isValidPassword = await bcrypt.compare(password, user.password);

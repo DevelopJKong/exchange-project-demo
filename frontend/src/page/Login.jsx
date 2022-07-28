@@ -19,6 +19,10 @@ const Login = () => {
     try {
       const userData = await userRequest.post(`/users/login`, { ...data });
 
+      if (userData.data.message === "존재하는 계정이 없습니다") {
+        throw new Error("user");
+      }
+
       if (!userData.data.verified) {
         throw new Error("email");
       }
@@ -33,6 +37,11 @@ const Login = () => {
     } catch (error) {
       const { message } = error;
       switch (message) {
+        case "user":
+          setError("userExist", {
+            message: "존재하는 계정이 없습니다",
+          });
+          break;
         case "email":
           setError("verified", {
             message: "이메일을 인증해주세요",
@@ -83,6 +92,7 @@ const Login = () => {
       <div>{errors?.password?.message}</div>
       <div>{errors?.extraError?.message}</div>
       <div>{errors?.verified?.message}</div>
+      <div>{errors?.userExist?.message}</div>
     </form>
   );
 };

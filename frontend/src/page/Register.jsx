@@ -20,16 +20,20 @@ const Register = () => {
         throw new Error("password");
       }
       const userData = await userRequest.post(`/users/join`, { ...data });
+      console.log(userData);
       if (userData) {
         navigator("/");
       }
     } catch (error) {
       const { message } = error;
+      console.log(error);
       switch (message) {
         case "password":
           setError("diffPassword", { message: "비밀번호가 일치하지 않습니다" });
           break;
-
+        // case "Request failed with status code 400":
+        //   setError("userExist", { message: "동일한 닉네임이 있습니다" });
+        //   break;
         default:
           setError("extraServerError", {
             message: "잠시후에 다시 시도해주세요",
@@ -38,12 +42,13 @@ const Register = () => {
       }
     }
   };
-  
+
   const handleClick = async () => {
     const email = document.getElementById("email");
     try {
       const checkInfo = await emailChecker(email.value);
       setEmailCheck(checkInfo.data.message);
+      clearErrors();
     } catch (error) {
       const { message } = error;
       switch (message) {
@@ -103,6 +108,7 @@ const Register = () => {
           minLength: { value: 5, message: "검증 패스워드가 너무 짧습니다" },
         })}
       />
+
       <input
         placeholder="한글명"
         type="text"
@@ -125,7 +131,7 @@ const Register = () => {
           minLength: { value: 3, message: "닉네임이 너무 짧습니다" },
         })}
       />
-      <button>회원가입</button>
+      <button >회원가입</button>
       <br />
       <Link to="/">Home</Link>
       <br />
