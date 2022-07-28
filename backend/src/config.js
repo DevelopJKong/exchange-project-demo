@@ -23,6 +23,10 @@ export const config = {
     },
     bcrypt: {
         saltRounds:required('BCRYPT_SALT_ROUNDS',10)
+    },
+    google: {
+        mail:required('GOOGLE_MAIL'),
+        password:required('GOOGLE_PASSWORD'),
     }
 
 }

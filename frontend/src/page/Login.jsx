@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { loginFailureState, loginSuccessState } from "../atoms";
 import axios from "axios";
+import { BASE_URL } from "../apiCall";
 
 const Form = styled.form``;
 const Input = styled.input``;
@@ -23,7 +24,7 @@ const Login = () => {
 
   const onValid = async (data) => {
     try {
-      const userData = await axios(`http://localhost:5000/api/users/login`, {
+      const userData = await axios(`${BASE_URL}/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
