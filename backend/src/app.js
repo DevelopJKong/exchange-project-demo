@@ -24,12 +24,11 @@ if (process.env.MODE === "development") {
     const openAPIDocument = yaml.load(
       path.join(process.cwd(), "/src/swagger/swagger.yaml")
     );
-    app.use("/api/api-docs", swaggerUi.serve, swaggerUi.setup(openAPIDocument));
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openAPIDocument));
 }
 
 // Routers
 app.use("/api/users",userRouter);
-
 
 sequelize.sync().then(() => {
     console.log("mysql is connecting");
