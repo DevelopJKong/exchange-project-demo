@@ -1,15 +1,8 @@
-import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { loginFailureState, loginSuccessState } from "../atoms";
-import axios from "axios";
-import { BASE_URL } from "../apiCall";
-
-const Form = styled.form``;
-const Input = styled.input``;
-const Button = styled.button``;
-const ErrorInfo = styled.div``;
+import { userRequest } from "../apiCall";
 
 const Login = () => {
   const {
@@ -24,13 +17,7 @@ const Login = () => {
 
   const onValid = async (data) => {
     try {
-      const userData = await axios(`${BASE_URL}/users/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: JSON.stringify(data),
-      });
+      const userData = await userRequest.post(`/users/login`, { ...data });
 
       if (!userData.data.verified) {
         throw new Error("email");
@@ -59,13 +46,12 @@ const Login = () => {
           break;
       }
       setLoginFailure(loginFailure);
-
     }
   };
 
   return (
-    <Form onSubmit={handleSubmit(onValid)} onClick={() => clearErrors()}>
-      <Input
+    <form onSubmit={handleSubmit(onValid)} onClick={() => clearErrors()}>
+      <input
         placeholder="email"
         type="text"
         {...register("email", {
@@ -73,10 +59,10 @@ const Login = () => {
             value: true,
             message: "필수값입니다",
           },
-          minLength: { value: 5, message: "Your email is too short" },
+          minLength: { value: 5, message: "이메일이 너무 짧습니다" },
         })}
       />
-      <Input
+      <input
         placeholder="password"
         type="password"
         {...register("password", {
@@ -87,17 +73,17 @@ const Login = () => {
           minLength: { value: 4, message: "Your password is too short" },
         })}
       />
-      <Button>LOGIN</Button>
+      <button>LOGIN</button>
       <br />
       <Link to="/">Home</Link>
       <br />
       <Link to="/join">Join</Link>
       <br />
-      <ErrorInfo>{errors?.username?.message}</ErrorInfo>
-      <ErrorInfo>{errors?.password?.message}</ErrorInfo>
-      <ErrorInfo>{errors?.extraError?.message}</ErrorInfo>
-      <ErrorInfo>{errors?.verified?.message}</ErrorInfo>
-    </Form>
+      <div>{errors?.username?.message}</div>
+      <div>{errors?.password?.message}</div>
+      <div>{errors?.extraError?.message}</div>
+      <div>{errors?.verified?.message}</div>
+    </form>
   );
 };
 

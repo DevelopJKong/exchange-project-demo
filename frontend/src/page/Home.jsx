@@ -5,6 +5,7 @@ import { loginSuccessState, logOutState } from "../atoms";
 const Home = () => {
   const [login, setLogin] = useRecoilState(loginSuccessState);
   const logout = useRecoilValue(logOutState);
+  console.log(login);
   return (
     <>
       <div>{login?.currentUser ? "Welcome" : "Home"}</div>
