@@ -59,40 +59,47 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onValid)} onClick={() => clearErrors()}>
-      <input
-        placeholder="email"
-        type="text"
-        {...register("email", {
-          required: {
-            value: true,
-            message: "필수값입니다",
-          },
-          minLength: { value: 5, message: "이메일이 너무 짧습니다" },
-        })}
-      />
-      <input
-        placeholder="password"
-        type="password"
-        {...register("password", {
-          required: {
-            value: true,
-            message: "필수값입니다",
-          },
-          minLength: { value: 4, message: "Your password is too short" },
-        })}
-      />
-      <button>LOGIN</button>
-      <br />
-      <Link to="/">Home</Link>
-      <br />
-      <Link to="/join">Join</Link>
-      <br />
-      <div>{errors?.password?.message}</div>
-      <div>{errors?.extraError?.message}</div>
-      <div>{errors?.verified?.message}</div>
-      <div>{errors?.userExist?.message}</div>
-    </form>
+    <main>
+      {/*👆 삭제할 예정*/}
+      <h2>로그인 페이지</h2>
+      {/*👆 삭제할 예정*/}
+      <form onSubmit={handleSubmit(onValid)} onClick={() => clearErrors()}>
+        <input
+          placeholder="email"
+          type="text"
+          {...register("email", {
+            required: {
+              value: true,
+              message: "필수값입니다",
+            },
+            minLength: { value: 5, message: "이메일이 너무 짧습니다" },
+          })}
+        />
+        <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.email?.message}</div>
+        <input
+          placeholder="password"
+          type="password"
+          {...register("password", {
+            required: {
+              value: true,
+              message: "필수값입니다",
+            },
+            minLength: { value: 4, message: "패스워드가 너무 짧습니다" },
+          })}
+        />
+        <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.password?.message}</div>
+
+        <button>로그인</button>
+        <br />
+        <Link to="/">Home</Link>
+        <br />
+        <Link to="/join">Join</Link>
+        <br />
+        <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.extraError?.message}</div>
+        <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.verified?.message}</div>
+        <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.userExist?.message}</div>
+      </form>
+    </main>
   );
 };
 

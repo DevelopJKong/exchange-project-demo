@@ -153,7 +153,7 @@ export const postCheck = async (req, res) => {
 
 export const postEmailCheck = async (req, res) => {
   const { email } = req.body;
-
+  console.log(email);
   try {
     if (!email.includes(".com")) {
       return res.json({ message: "이메일 형식이 아닙니다" });
