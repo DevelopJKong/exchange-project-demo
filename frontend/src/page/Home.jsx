@@ -6,14 +6,15 @@ const Home = () => {
   const [login, setLogin] = useRecoilState(loginSuccessState);
   const logout = useRecoilValue(logOutState);
   return (
-    <>
-      <div>{login?.currentUser ? "Welcome" : "Home"}</div>
+    <main>
+      <h2>Exchange Project</h2>
+      <div><p>{login?.currentUser ? "Welcome" : "Home"}</p></div>
       {login?.currentUser ? (
-        <button onClick={() => setLogin(logout)}>LogOut</button>
+        <Link onClick={() => setLogin(logout)} to="#">LogOut</Link>
       ) : (
         <Link to="/login">Login</Link>
       )}
-    </>
+    </main>
   );
 };
 
