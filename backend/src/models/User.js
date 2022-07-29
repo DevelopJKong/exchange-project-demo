@@ -29,6 +29,10 @@ export const User = sequelize.define(
             type: DataTypes.STRING(45),
             allowNull: false,
         },
+        birthNumber: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
         password: {
             type: DataTypes.STRING(128),
             allowNull: false,
@@ -36,6 +40,10 @@ export const User = sequelize.define(
         country: {
             type: DataTypes.STRING(128),
             allowNull: false,
+        },
+        recommendCode: {
+            type: DataTypes.STRING(128),
+            allowNull: true,
         },
         verified: {
             type: DataTypes.BOOLEAN(false),

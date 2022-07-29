@@ -70,106 +70,146 @@ const Register = () => {
 
     return (
         <form onSubmit={handleSubmit(onValid)} onClick={() => clearErrors()}>
-            <select {...register("country")}>
-                <option value="kr">한국</option>
-                <option value="jp">일본</option>
-            </select>
-            <input
-                placeholder="아이디로 등록할 이메일을 기입하여 주세요"
-                type="email"
-                id="email"
-                {...register("email", {
-                    required: {
-                        value: true,
-                        message: "필수값입니다",
-                    },
-                    minLength: { value: 5, message: "이메일이 너무 짧습니다" },
-                    pattern: {
-                        value: /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-                        message: "이메일 형식이 아닙니다",
-                    },
-                })}
-            />
+            <div>
+                <select {...register("country")}>
+                    <option value="kr">한국</option>
+                    <option value="jp">일본</option>
+                </select>
+            </div>
+            <div>
+                <label htmlFor="email">이메일: </label>
+                <input
+                    placeholder="아이디로 등록할 이메일을 기입하여 주세요"
+                    type="email"
+                    id="email"
+                    {...register("email", {
+                        required: {
+                            value: true,
+                            message: "필수값입니다",
+                        },
+                        minLength: { value: 5, message: "이메일이 너무 짧습니다" },
+                        pattern: {
+                            value: /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                            message: "이메일 형식이 아닙니다",
+                        },
+                    })}
+                />
 
-            <button type="button" onClick={handleClick}>
-                중복 확인
-            </button>
+                <button type="button" onClick={handleClick}>
+                    중복 확인
+                </button>
 
-            <input
-                placeholder="비밀번호를 입력하여 주세요."
-                type="password"
-                {...register("password", {
-                    required: {
-                        value: true,
-                        message: "필수값입니다",
-                    },
-                    minLength: { value: 5, message: "패스워드가 너무 짧습니다" },
-                })}
-            />
+                {/*이메일 관련 에러 모음*/}
+                <div>{emailCheck}</div>
+                <div>{errors?.notEmail?.message}</div>
+                <div>{errors?.checkEmail?.message}</div>
+                <div>{errors?.email?.message}</div>
+            </div>
+            <div>
+                <label htmlFor="password">비밀번호: </label>
+                <input
+                    placeholder="비밀번호를 입력하여 주세요."
+                    type="password"
+                    id="password"
+                    {...register("password", {
+                        required: {
+                            value: true,
+                            message: "필수값입니다",
+                        },
+                        minLength: { value: 5, message: "패스워드가 너무 짧습니다" },
+                    })}
+                />
+                {/*비밀번호 관련 에러 모음*/}
+                <div>{errors?.password?.message}</div>
+            </div>
+            <div>
+                <label htmlFor="confirmation_password">비밀번호 확인: </label>
+                <input
+                    placeholder="위 비밀번호와 동일하게 입력해주세요."
+                    type="password"
+                    id="confirmation_password"
+                    {...register("confirmation_password", {
+                        required: {
+                            value: true,
+                            message: "필수값입니다",
+                        },
+                        minLength: { value: 5, message: "검증 패스워드가 너무 짧습니다" },
+                    })}
+                />
+                {/*비밀번호 확인 관련 에러 모음*/}
+                <div>{errors?.confirmation_password?.message}</div>
+                <div>{errors?.diffPassword?.message}</div>
+            </div>
 
-            <input
-                placeholder="위 비밀번호와 동일하게 입력해주세요."
-                type="password"
-                {...register("confirmation_password", {
-                    required: {
-                        value: true,
-                        message: "필수값입니다",
-                    },
-                    minLength: { value: 5, message: "검증 패스워드가 너무 짧습니다" },
-                })}
-            />
+            <div>
+                <label htmlFor="name">한글명: </label>
+                <input
+                    placeholder="한글명"
+                    type="text"
+                    id="name"
+                    {...register("name", {
+                        required: {
+                            value: true,
+                            message: "필수값입니다",
+                        },
+                        minLength: { value: 2, message: "이름이 너무 짧습니다" },
+                    })}
+                />
+                <div>{errors?.name?.message}</div>
+            </div>
+            <div>
+                <label htmlFor="lastName">영문명: </label>
+                <input
+                    placeholder="영문명[성]"
+                    type="text"
+                    id="lastName"
+                    {...register("lastName", {
+                        required: {
+                            value: true,
+                            message: "필수값입니다",
+                        },
+                    })}
+                />
+                <input
+                    placeholder="영문명[이름]"
+                    type="text"
+                    {...register("firstName", {
+                        required: {
+                            value: true,
+                            message: "필수값입니다",
+                        },
+                    })}
+                />
+                <div>{errors?.lastName?.message}</div>
+                <div>{errors?.firstName?.message}</div>
+            </div>
 
-            <input
-                placeholder="한글명"
-                type="text"
-                {...register("name", {
-                    required: {
-                        value: true,
-                        message: "필수값입니다",
-                    },
-                    minLength: { value: 2, message: "이름이 너무 짧습니다" },
-                })}
-            />
-
-            <input
-                placeholder="영문명[성]"
-                type="text"
-                {...register("lastName", {
-                    required: {
-                        value: true,
-                        message: "필수값입니다",
-                    },
-                    minLength: { value: 3, message: "닉네임이 너무 짧습니다" },
-                })}
-            />
-            <input
-                placeholder="영문명[이름]"
-                type="text"
-                {...register("firstName", {
-                    required: {
-                        value: true,
-                        message: "필수값입니다",
-                    },
-                    minLength: { value: 3, message: "닉네임이 너무 짧습니다" },
-                })}
-            />
+            <div>
+                <label htmlFor="birthNumber">생년월일: </label>
+                <input
+                    placeholder="생년월일 8자리 (YYYYMMDD)"
+                    type="text"
+                    id="birthNumber"
+                    {...register("birthNumber", {
+                        required: {
+                            value: true,
+                            message: "필수값입니다",
+                        },
+                        minLength: { value: 7, message: "8자리를 입력해주세요" },
+                    })}
+                />
+            </div>
+            <div>
+                <label>추천 코드: </label>
+                <input placeholder="(선택사항)추천 코드를 입력해주세요" type="text" id="recommendCode" {...register("recommendCode")} />
+            </div>
             <button>회원가입</button>
             <br />
             <Link to="/">Home</Link>
             <br />
             <Link to="/login">Login</Link>
             <br />
-            <div>{emailCheck}</div>
-            <div>{errors?.notEmail?.message}</div>
-            <div>{errors?.checkEmail?.message}</div>
 
-            <div>{errors?.email?.message}</div>
-            <div>{errors?.password?.message}</div>
-            <div>{errors?.confirmation_password?.message}</div>
-            <div>{errors?.name?.message}</div>
-            <div>{errors?.lastName?.message}</div>
-            <div>{errors?.firstName?.message}</div>
-            <div>{errors?.diffPassword?.message}</div>
             <div>{errors?.extraServerError?.message}</div>
         </form>
     );

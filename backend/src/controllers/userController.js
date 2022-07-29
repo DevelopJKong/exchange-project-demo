@@ -37,7 +37,7 @@ export const getPage = (req, res) => {
 };
 
 export const postJoin = async (req, res) => {
-    const { country, firstName, lastName, password, name, email, verified } = req.body;
+    const { country, firstName, lastName, password, name, email, verified, recommendCode, birthNumber } = req.body;
     try {
         const exists = await User.findOne({
             where: { email },
@@ -80,6 +80,8 @@ export const postJoin = async (req, res) => {
             verified,
             firstName,
             lastName,
+            recommendCode,
+            birthNumber,
         });
 
         await Verification.create({
