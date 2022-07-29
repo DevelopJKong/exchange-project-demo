@@ -134,7 +134,12 @@ export const postCheck = async (req, res) => {
 
 export const postEmailCheck = async (req, res) => {
     const { email } = req.body;
+
     try {
+        if (!email.includes(".com")) {
+            return res.json({ message: "이메일 형식이 아닙니다" });
+        }
+
         const user = await User.findOne({ where: { email } });
         if (user) {
             return res.status(409).json({ message: `해당 이메일이 존재 합니다` });
