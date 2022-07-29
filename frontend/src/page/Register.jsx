@@ -70,6 +70,10 @@ const Register = () => {
 
     return (
         <form onSubmit={handleSubmit(onValid)} onClick={() => clearErrors()}>
+            <select {...register("country")}>
+                <option value="kr">한국</option>
+                <option value="jp">일본</option>
+            </select>
             <input
                 placeholder="아이디로 등록할 이메일을 기입하여 주세요"
                 type="email"
@@ -126,10 +130,22 @@ const Register = () => {
                     minLength: { value: 2, message: "이름이 너무 짧습니다" },
                 })}
             />
+
             <input
-                placeholder="Username"
+                placeholder="영문명[성]"
                 type="text"
-                {...register("username", {
+                {...register("lastName", {
+                    required: {
+                        value: true,
+                        message: "필수값입니다",
+                    },
+                    minLength: { value: 3, message: "닉네임이 너무 짧습니다" },
+                })}
+            />
+            <input
+                placeholder="영문명[이름]"
+                type="text"
+                {...register("firstName", {
                     required: {
                         value: true,
                         message: "필수값입니다",
@@ -144,13 +160,15 @@ const Register = () => {
             <Link to="/login">Login</Link>
             <br />
             <div>{emailCheck}</div>
-            <div>{errors?.email?.message}</div>
             <div>{errors?.notEmail?.message}</div>
             <div>{errors?.checkEmail?.message}</div>
+
+            <div>{errors?.email?.message}</div>
             <div>{errors?.password?.message}</div>
             <div>{errors?.confirmation_password?.message}</div>
-            <div>{errors?.username?.message}</div>
             <div>{errors?.name?.message}</div>
+            <div>{errors?.lastName?.message}</div>
+            <div>{errors?.firstName?.message}</div>
             <div>{errors?.diffPassword?.message}</div>
             <div>{errors?.extraServerError?.message}</div>
         </form>

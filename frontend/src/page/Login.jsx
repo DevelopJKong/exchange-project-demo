@@ -88,7 +88,6 @@ const Login = () => {
       <br />
       <Link to="/join">Join</Link>
       <br />
-      <div>{errors?.username?.message}</div>
       <div>{errors?.password?.message}</div>
       <div>{errors?.extraError?.message}</div>
       <div>{errors?.verified?.message}</div>

@@ -37,11 +37,10 @@ export const getPage = (req, res) => {
 };
 
 export const postJoin = async (req, res) => {
-    const { username, password, name, email, verified } = req.body;
-
+    const { country, firstName, lastName, password, name, email, verified } = req.body;
     try {
         const exists = await User.findOne({
-            where: { [Op.or]: [{ email, username }] },
+            where: { email },
         });
         if (exists) {
             return res.status(409).json({ message: `해당 이메일이 존재 합니다` });
@@ -56,7 +55,7 @@ export const postJoin = async (req, res) => {
         const mailVar = {
             form: `${process.env.GOOGLE_MAIL}`,
             to: email,
-            subject: `${username}님 환영합니다!`,
+            subject: `${name}님 환영합니다!`,
             html: `
           <strong>Exchange project</strong>
           <br/>
@@ -74,11 +73,13 @@ export const postJoin = async (req, res) => {
         };
 
         const user = await User.create({
-            username,
+            email,
             password: hashPassword,
             name,
-            email,
+            country,
             verified,
+            firstName,
+            lastName,
         });
 
         await Verification.create({

@@ -12,23 +12,30 @@ export const User = sequelize.define(
             allowNull: false,
             primaryKey: true,
         },
-        username: {
-            type: DataTypes.STRING(45),
-            allowNull: false,
-            unique: true,
-        },
-        password: {
+        email: {
             type: DataTypes.STRING(128),
             allowNull: false,
+            unique: true,
         },
         name: {
             type: DataTypes.STRING(128),
             allowNull: false,
         },
-        email: {
+        firstName: {
+            type: DataTypes.STRING(45),
+            allowNull: false,
+        },
+        lastName: {
+            type: DataTypes.STRING(45),
+            allowNull: false,
+        },
+        password: {
             type: DataTypes.STRING(128),
             allowNull: false,
-            unique: true,
+        },
+        country: {
+            type: DataTypes.STRING(128),
+            allowNull: false,
         },
         verified: {
             type: DataTypes.BOOLEAN(false),
