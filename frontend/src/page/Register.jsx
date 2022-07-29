@@ -20,20 +20,15 @@ const Register = () => {
                 throw new Error("password");
             }
             const userData = await userRequest.post(`/users/join`, { ...data });
-            console.log(userData);
             if (userData) {
                 navigator("/");
             }
         } catch (error) {
             const { message } = error;
-            console.log(error);
             switch (message) {
                 case "password":
                     setError("diffPassword", { message: "비밀번호가 일치하지 않습니다" });
                     break;
-                // case "Request failed with status code 400":
-                //   setError("userExist", { message: "동일한 닉네임이 있습니다" });
-                //   break;
                 default:
                     setError("extraServerError", {
                         message: "잠시후에 다시 시도해주세요",
@@ -117,6 +112,10 @@ const Register = () => {
                             message: "필수값입니다",
                         },
                         minLength: { value: 5, message: "패스워드가 너무 짧습니다" },
+                        pattern: {
+                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/,
+                            message: "대문자,소문자,특수문자를 포함해주세요",
+                        },
                     })}
                 />
                 {/*비밀번호 관련 에러 모음*/}
@@ -134,6 +133,10 @@ const Register = () => {
                             message: "필수값입니다",
                         },
                         minLength: { value: 5, message: "검증 패스워드가 너무 짧습니다" },
+                        pattern: {
+                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/,
+                            message: "대문자,소문자,특수문자를 포함해주세요",
+                        },
                     })}
                 />
                 {/*비밀번호 확인 관련 에러 모음*/}
@@ -152,7 +155,10 @@ const Register = () => {
                             value: true,
                             message: "필수값입니다",
                         },
-                        minLength: { value: 2, message: "이름이 너무 짧습니다" },
+                        pattern: {
+                            value: /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/,
+                            message: "한글 형식이 아닙니다",
+                        },
                     })}
                 />
                 <div>{errors?.name?.message}</div>
@@ -168,6 +174,10 @@ const Register = () => {
                             value: true,
                             message: "필수값입니다",
                         },
+                        pattern: {
+                            value: /^[a-zA-Z]*$/,
+                            message: "영어 형식이 아닙니다",
+                        },
                     })}
                 />
                 <input
@@ -177,6 +187,10 @@ const Register = () => {
                         required: {
                             value: true,
                             message: "필수값입니다",
+                        },
+                        pattern: {
+                            value: /^[a-zA-Z]*$/,
+                            message: "영어 형식이 아닙니다",
                         },
                     })}
                 />
@@ -195,9 +209,10 @@ const Register = () => {
                             value: true,
                             message: "필수값입니다",
                         },
-                        minLength: { value: 7, message: "8자리를 입력해주세요" },
+                        minLength: { value: 7, message: "생년월일 8자리를 입력해주세요" },
                     })}
                 />
+                <div>{errors?.birthNumber?.message}</div>
             </div>
             <div>
                 <label>추천 코드: </label>
