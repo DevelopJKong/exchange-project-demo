@@ -7,6 +7,9 @@ function required(key,defaultValue = "") {
 }
 
 export const config = {
+    backend: {
+        url: required('BACKEND_DOMAIN')
+    },
     jwt: {
         secretKey:required('JWT_SECRET',""),
         expiresInSec:required('JWT_EXPIRES_SEC',"86400")
