@@ -166,7 +166,7 @@ const Register = () => {
               },
             })}
           />
-          <div>{errors?.name?.message}</div>
+          <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.name?.message}</div>
         </div>
         <div>
           <label htmlFor="lastName">영문명: </label>
