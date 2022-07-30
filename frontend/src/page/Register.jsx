@@ -15,6 +15,7 @@ const Register = () => {
   const navigator = useNavigate();
   const [emailCheck, setEmailCheck] = useState("");
   const buttonRef = useRef(null);
+  const formRef = useRef(null);
 
   const onValid = async (data) => {
     const { password, confirmation_password } = data;
@@ -74,9 +75,12 @@ const Register = () => {
     buttonRef.current.click();
   }, []);
 
-
   return (
-    <form onSubmit={handleSubmit(onValid)} onClick={() => clearErrors()}>
+    <form
+      onSubmit={handleSubmit(onValid)}
+      onClick={() => clearErrors()}
+      ref={formRef}
+    >
       <div>
         <select {...register("country")}>
           <option value="kr">한국</option>
@@ -143,16 +147,19 @@ const Register = () => {
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/,
               message: "대문자,소문자,특수문자를 포함해주세요",
             },
-            validate: {
-              posttive: (value) =>
-                value === getValues("password") && "비밀번호가 일치합니다",
-            },
           })}
+          onKeyDown={(e) => e.key === "Tab" && formRef.current.click()}
         />
 
         {/*비밀번호 확인 관련 에러 모음*/}
-        <div>{errors?.checkPassword?.message}</div>
+        <div>
+          {getValues("password") === getValues("confirmation_password") &&
+          getValues("password") !== ""
+            ? "비밀번호가 일치합니다"
+            : ""}
+        </div>
         <div>{errors?.confirmation_password?.message}</div>
+        <div>{errors?.checkPassword?.message}</div>
         <div>{errors?.diffPassword?.message}</div>
       </div>
 
