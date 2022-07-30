@@ -39,7 +39,7 @@ const Register = () => {
           break;
         default:
           setError("extraServerError", {
-            message: "잠시후에 다시 시도해주세요",
+            message: "입력하신 정보를 다시 입력해주세요",
           });
           break;
       }
@@ -124,9 +124,8 @@ const Register = () => {
             required: true,
             minLength: { value: 5, message: "패스워드가 너무 짧습니다" },
             pattern: {
-              value:
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/,
-              message: "대문자,소문자,특수문자를 포함해주세요",
+              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{5,}$/,
+              message: "대문자,소문자,숫자를 포함해주세요",
             },
           })}
         />
@@ -143,9 +142,8 @@ const Register = () => {
             required: true,
             minLength: { value: 5, message: "검증 패스워드가 너무 짧습니다" },
             pattern: {
-              value:
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/,
-              message: "대문자,소문자,특수문자를 포함해주세요",
+              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{5,}$/,
+              message: "대문자,소문자,숫자를 포함해주세요",
             },
           })}
           onKeyDown={(e) => e.key === "Tab" && formRef.current.click()}
