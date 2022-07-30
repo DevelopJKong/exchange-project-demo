@@ -9,11 +9,13 @@ const Register = () => {
     handleSubmit,
     setError,
     clearErrors,
+    getValues,
     formState: { errors },
   } = useForm();
   const navigator = useNavigate();
   const [emailCheck, setEmailCheck] = useState("");
   const buttonRef = useRef(null);
+  const conPasswordRef = useRef(null);
 
   const onValid = async (data) => {
     const { password, confirmation_password } = data;
@@ -21,6 +23,7 @@ const Register = () => {
       if (password !== confirmation_password) {
         throw new Error("password");
       }
+
       const userData = await userRequest.post(`/users/join`, { ...data });
       if (userData) {
         navigator("/");
@@ -68,6 +71,9 @@ const Register = () => {
   useEffect(() => {
     buttonRef.current.click();
   }, []);
+  console.log(getValues("password"));
+  console.log(getValues("confirmation_password"));
+  console.log(getValues("password") === getValues("confirmation_password"))
 
   return (
     <main>
@@ -90,11 +96,8 @@ const Register = () => {
             id="email"
             {...register("email", {
               required: true,
-              minLength: { value: 5, message: "이메일이 너무 짧습니다" },
-              pattern: {
-                value: /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-                message: "이메일 형식이 아닙니다",
-              },
+              minLength: 5,
+              pattern: /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
             })}
             onChange={() => setEmailCheck("")}
           />
@@ -107,7 +110,6 @@ const Register = () => {
           <div style={{ color: "green" } /*👈 삭제할 예정*/}>{emailCheck}</div>
           <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.notEmail?.message}</div>
           <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.checkEmail?.message}</div>
-          <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.email?.message}</div>
         </div>
         <div>
           <label htmlFor="password">비밀번호: </label>
@@ -123,7 +125,7 @@ const Register = () => {
                 value:
                   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/,
                 message: "대문자,소문자,특수문자를 포함해주세요",
-              },
+              }
             })}
           />
           {/*비밀번호 관련 에러 모음*/}
@@ -136,6 +138,7 @@ const Register = () => {
             placeholder="위 비밀번호와 동일하게 입력해주세요."
             type="password"
             id="confirmation_password"
+            ref={conPasswordRef}
             {...register("confirmation_password", {
               required: true,
               minLength: { value: 5, message: "검증 패스워드가 너무 짧습니다" },
@@ -147,6 +150,7 @@ const Register = () => {
             })}
           />
           {/*비밀번호 확인 관련 에러 모음*/}
+          <div style={{ color: "green" } /*👈 삭제할 예정*/}>{getValues("password") === getValues("confirmation_password") && getValues("password") !== "" ? "비밀번호가 일치합니다": ""}</div>
           <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.confirmation_password?.message}</div>
           <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.diffPassword?.message}</div>
         </div>
