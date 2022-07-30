@@ -56,8 +56,6 @@ export const postJoin = async (req, res) => {
       return res.status(409).json({ message: `해당 이메일이 존재 합니다` });
     }
 
-    const hashPassword = await bcrypt.hash(password, 10);
-
     // 신분증 인증,,계좌 1원 인증, 이메일 인증
 
     // 1.이메일 인증
@@ -84,7 +82,7 @@ export const postJoin = async (req, res) => {
 
     const user = await User.create({
       email,
-      password: hashPassword,
+      password,
       name,
       country,
       verified,
