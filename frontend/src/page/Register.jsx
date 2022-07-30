@@ -9,11 +9,11 @@ const Register = () => {
     handleSubmit,
     setError,
     clearErrors,
+    getValues,
     formState: { errors },
   } = useForm();
   const navigator = useNavigate();
   const [emailCheck, setEmailCheck] = useState("");
-  const emailRef = useRef(null);
   const buttonRef = useRef(null);
 
   const onValid = async (data) => {
@@ -28,9 +28,13 @@ const Register = () => {
       }
     } catch (error) {
       const { message } = error;
+      console.log(message);
       switch (message) {
         case "password":
           setError("diffPassword", { message: "비밀번호가 일치하지 않습니다" });
+          break;
+        case message.includes("409"):
+          setError("existsUser", { message: "해당 이메일이 존재 합니다" });
           break;
         default:
           setError("extraServerError", {
@@ -42,8 +46,9 @@ const Register = () => {
   };
 
   const handleClick = async () => {
+    const email = document.getElementById("email");
     try {
-      const checkInfo = await emailChecker(emailRef.current.value);
+      const checkInfo = await emailChecker(email.value);
       if (checkInfo.data.message === "이메일 형식이 아닙니다") {
         throw new Error("notEmail");
       }
@@ -69,6 +74,7 @@ const Register = () => {
     buttonRef.current.click();
   }, []);
 
+
   return (
     <form onSubmit={handleSubmit(onValid)} onClick={() => clearErrors()}>
       <div>
@@ -83,7 +89,6 @@ const Register = () => {
           placeholder="아이디로 등록할 이메일을 기입하여 주세요"
           type="email"
           id="email"
-          ref={emailRef}
           {...register("email", {
             required: true,
             minLength: { value: 5, message: "이메일이 너무 짧습니다" },
@@ -92,6 +97,7 @@ const Register = () => {
               message: "이메일 형식이 아닙니다",
             },
           })}
+          onKeyDown={(e) => e.key === "Backspace" && setEmailCheck("")}
         />
 
         <button type="button" onClick={handleClick}>
@@ -100,9 +106,9 @@ const Register = () => {
 
         {/*이메일 관련 에러 모음*/}
         <div>{emailCheck}</div>
+        <div>{errors?.email?.message}</div>
         <div>{errors?.notEmail?.message}</div>
         <div>{errors?.checkEmail?.message}</div>
-        <div>{errors?.email?.message}</div>
       </div>
       <div>
         <label htmlFor="password">비밀번호: </label>
@@ -137,9 +143,15 @@ const Register = () => {
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/,
               message: "대문자,소문자,특수문자를 포함해주세요",
             },
+            validate: {
+              posttive: (value) =>
+                value === getValues("password") && "비밀번호가 일치합니다",
+            },
           })}
         />
+
         {/*비밀번호 확인 관련 에러 모음*/}
+        <div>{errors?.checkPassword?.message}</div>
         <div>{errors?.confirmation_password?.message}</div>
         <div>{errors?.diffPassword?.message}</div>
       </div>
