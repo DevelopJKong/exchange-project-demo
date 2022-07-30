@@ -76,12 +76,12 @@ User.beforeCreate(async (user, options) => {
 });
 
 //관계 설정
-User.hasMany(Verification, {
+User.hasOne(Verification, {
+  foreignKey: "user_id",
+});
+Verification.belongsTo(User, {
   foreignKey: "user_id",
   allowNull: false,
   constraints: true,
   onDelete: "cascade",
-});
-Verification.belongsTo(User, {
-  foreignKey: "user_id",
 });
