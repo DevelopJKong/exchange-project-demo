@@ -14,8 +14,19 @@ const Register = () => {
   } = useForm();
   const navigator = useNavigate();
   const [emailCheck, setEmailCheck] = useState("");
+  const emailRef = useRef(null);
   const buttonRef = useRef(null);
-  const conPasswordRef = useRef(null);
+  const formRef = useRef(null);
+  
+  const {ref , ...rest} = register("email", {
+    required: true,
+    minLength: { value: 5, message:"이메일이 너무 짧습니다"},
+    pattern: { 
+        value: /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+        message:"이메일 형식이 아닙니다"},
+  });
+
+
 
   const onValid = async (data) => {
     const { password, confirmation_password } = data;
@@ -44,9 +55,9 @@ const Register = () => {
   };
 
   const handleClick = async () => {
-    const email = document.getElementById("email");
+    //const email = document.getElementById("email");
     try {
-      const checkInfo = await emailChecker(email.value);
+      const checkInfo = await emailChecker(emailRef.current.value);
       if (checkInfo.data.message === "이메일 형식이 아닙니다") {
         throw new Error("notEmail");
       }
@@ -71,16 +82,15 @@ const Register = () => {
   useEffect(() => {
     buttonRef.current.click();
   }, []);
-  console.log(getValues("password"));
-  console.log(getValues("confirmation_password"));
-  console.log(getValues("password") === getValues("confirmation_password"))
+
+// TODO: 전체적으로 정리하기
 
   return (
     <main>
       {/*👆 삭제할 예정*/}
       <h2>회원가입 페이지</h2>
       {/*👆 삭제할 예정*/}
-      <form onSubmit={handleSubmit(onValid)} onClick={() => clearErrors()}>
+      <form onSubmit={handleSubmit(onValid)} onClick={() => clearErrors()} ref={formRef}>
         <div>
           <select {...register("country")}>
             <option value="kr">한국</option>
@@ -94,12 +104,12 @@ const Register = () => {
             placeholder="아이디로 등록할 이메일을 기입하여 주세요"
             type="email"
             id="email"
-            {...register("email", {
-              required: true,
-              minLength: 5,
-              pattern: /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-            })}
-            onChange={() => setEmailCheck("")}
+            {...rest}
+            ref={(e) => {
+                ref(e)
+                emailRef.current = e 
+              }}
+            onKeyDown={(e) => e.key === "Backspace" && setEmailCheck("")}
           />
 
           <button type="button" onClick={handleClick}>
@@ -108,6 +118,7 @@ const Register = () => {
 
           {/*이메일 관련 에러 모음*/}
           <div style={{ color: "green" } /*👈 삭제할 예정*/}>{emailCheck}</div>
+          <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.email?.message}</div>
           <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.notEmail?.message}</div>
           <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.checkEmail?.message}</div>
         </div>
@@ -138,7 +149,6 @@ const Register = () => {
             placeholder="위 비밀번호와 동일하게 입력해주세요."
             type="password"
             id="confirmation_password"
-            ref={conPasswordRef}
             {...register("confirmation_password", {
               required: true,
               minLength: { value: 5, message: "검증 패스워드가 너무 짧습니다" },
@@ -148,9 +158,10 @@ const Register = () => {
                 message: "대문자,소문자,특수문자를 포함해주세요",
               },
             })}
+            onKeyDown={(e) => e.key === "Tab" && formRef.current.click()}
           />
           {/*비밀번호 확인 관련 에러 모음*/}
-          <div style={{ color: "green" } /*👈 삭제할 예정*/}>{getValues("password") === getValues("confirmation_password") && getValues("password") !== "" ? "비밀번호가 일치합니다": ""}</div>
+          <div style={{ color: "green" } /*👈 삭제할 예정*/}>{getValues("password") === getValues("confirmation_password")  && getValues("password") !== "" ? "비밀번호가 일치합니다" : ""}</div>
           <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.confirmation_password?.message}</div>
           <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.diffPassword?.message}</div>
         </div>
@@ -227,7 +238,7 @@ const Register = () => {
             {...register("recommendCode")}
           />
         </div>
-        <button ref={buttonRef}>회원가입</button>
+        <button  ref={buttonRef}>회원가입</button>
         <br />
         <Link to="/">Home</Link>
         <br />
