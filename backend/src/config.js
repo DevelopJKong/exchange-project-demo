@@ -7,8 +7,8 @@ function required(key, defaultValue = "") {
 }
 
 export const config = {
-  backend: {
-    url: required("BACKEND_DOMAIN"),
+  frontend: {
+    url: required("FRONTEND_DOMAIN"),
   },
   jwt: {
     secretKey: required("JWT_SECRET", ""),
