@@ -1,5 +1,5 @@
 import express from "express";
-import { getPage, postCheck, postEmailCheck, postJoin, postLogin } from "../controllers/userController.js";
+import { postCheck, postEmailCheck, postJoin, postLogin } from "../controllers/userController.js";
 
 const userRouter = express.Router();
 

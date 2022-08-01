@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { config } from "../../config.js";
 
 /** 이메일 관련 파리미터 및 함수 [시작] */
 export const emailConfig = {
