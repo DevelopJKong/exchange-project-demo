@@ -3,39 +3,10 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
 import { Verification } from "../models/Verification.js";
 import { config } from "../config.js";
-import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
-import { Op } from "sequelize";
 import { mailTemplate } from "../common/email/mailTemplate.js";
+import { sendMailer } from "../common/email/mailConfig.js";
 
-/** 이메일 관련 파리미터 및 함수 [시작] */
-const emailConfig = {
-  service: "gmail",
-  host: "smtp.gmail.com",
-  port: "587",
-  secure: false,
-  auth: {
-    user: config.google.mail,
-    pass: config.google.password,
-  },
-};
-
-const sendMailer = async (data) => {
-  const transporter = nodemailer.createTransport(emailConfig);
-  transporter.sendMail(data, (err, info) => {
-    if (err) {
-      console.log(err);
-    } else {
-      return info.response;
-    }
-  });
-};
-
-/** 이메일 관련 파리미터 및 함수 [끝]*/
-
-export const getPage = (req, res) => {
-  return res.send("hello");
-};
 
 export const postJoin = async (req, res) => {
   const {
