@@ -6,6 +6,7 @@ import { config } from "../config.js";
 import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 import { Op } from "sequelize";
+import { mailTemplate } from "../common/email/mailTemplate.js";
 
 /** 이메일 관련 파리미터 및 함수 [시작] */
 const emailConfig = {
@@ -64,20 +65,7 @@ export const postJoin = async (req, res) => {
       form: `${process.env.GOOGLE_MAIL}`,
       to: email,
       subject: `${name}님 환영합니다!`,
-      html: `
-          <strong>Exchange project</strong>
-          <br/>
-          <hr/>
-          <form method="post" action="http://localhost:5000/api/users/check">
-            <p style="font-size:25px">로그인 버튼을 클릭해주세요</p>
-            <input type="hidden" name="email" value=${email} />
-            <input type="hidden" name="checkEmail" value=${codeNum} />
-            <button style="color:#0984e3; font-size: 25px;">로그인</button>
-          </form>
-          <br/>
-          <p>감사합니다</p>
-          <p>&copy; ${new Date().getFullYear()} Exchange project</p>
-          `,
+      html: mailTemplate(email,codeNum),
     };
 
     const user = await User.create({
