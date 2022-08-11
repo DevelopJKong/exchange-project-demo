@@ -14,6 +14,6 @@ export const userRequest = axios.create({
 });
 
 export const emailChecker = async (email) => {
-  const res = await publicRequest.post("/users/emailCheck", { email });
+  const res = await userRequest.post("/users/emailCheck", { email });
   return res;
 };

@@ -17,63 +17,65 @@ const Register = () => {
   const emailRef = useRef(null);
   const buttonRef = useRef(null);
   const formRef = useRef(null);
-  
-  const {ref , ...rest} = register("email", {
+
+  const { ref, ...rest } = register("email", {
     required: true,
-    minLength: { value: 5, message:"이메일이 너무 짧습니다"},
-    pattern: { 
-        value: /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-        message:"이메일 형식이 아닙니다"},
+    minLength: { value: 5, message: "이메일이 너무 짧습니다" },
+    pattern: {
+      value: /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+      message: "이메일 형식이 아닙니다",
+    },
   });
 
-
-
   const onValid = async (data) => {
-    const { password, confirmation_password } = data;
     try {
-      if (password !== confirmation_password) {
-        throw new Error("password");
-      }
-
       const userData = await userRequest.post(`/users/join`, { ...data });
+
       if (userData) {
         navigator("/");
       }
     } catch (error) {
-      const { message } = error;
-      switch (message) {
-        case "password":
-          setError("diffPassword", { message: "비밀번호가 일치하지 않습니다" });
+      const {
+        response: {
+          data: { message, status },
+        },
+      } = error;
+      switch (status) {
+        case "notExistEmail":
+          setError("notExistEmail", { message });
+          break;
+        case "diffPassword":
+          setError("diffPassword", { message });
           break;
         default:
-          setError("extraServerError", {
-            message: "잠시후에 다시 시도해주세요",
-          });
+          setError("extraServerError", { message });
           break;
       }
     }
   };
 
   const handleClick = async () => {
-    //const email = document.getElementById("email");
-    try {
+    // const email = document.getElementById("email");
+    try { 
       const checkInfo = await emailChecker(emailRef.current.value);
-      if (checkInfo.data.message === "이메일 형식이 아닙니다") {
-        throw new Error("notEmail");
-      }
       setEmailCheck(checkInfo.data.message);
       clearErrors();
     } catch (error) {
-      const { message } = error;
-      switch (message) {
+      const {
+        response: {
+          data: { message, status },
+        },
+      } = error;
+      switch (status) {
         case "notEmail":
-          setError("notEmail", { message: "이메일 형식이 아닙니다" });
+          setError("notEmail", { message });
+          break;
+        case "existEmail":
+          setError("existEmail", { message });
           break;
         default:
           setEmailCheck("");
-          setError("checkEmail", {
-            message: "동일한 이메일이 있습니다 다른 이메일을 작성해주세요",
-          });
+          setError("extraServerError", { message });
           break;
       }
     }
@@ -83,7 +85,7 @@ const Register = () => {
     buttonRef.current.click();
   }, []);
 
-// TODO: 전체적으로 정리하기
+  // TODO: 전체적으로 정리하기
 
   return (
     <main>
@@ -106,9 +108,9 @@ const Register = () => {
             id="email"
             {...rest}
             ref={(e) => {
-                ref(e)
-                emailRef.current = e 
-              }}
+              ref(e);
+              emailRef.current = e;
+            }}
             onKeyDown={(e) => e.key === "Backspace" && setEmailCheck("")}
           />
 
@@ -125,7 +127,7 @@ const Register = () => {
         <div>
           <label htmlFor="password">비밀번호: </label>
           <input
-             style={{ width: "50%" } /*👈 삭제할 예정*/}
+            style={{ width: "50%" } /*👈 삭제할 예정*/}
             placeholder="비밀번호를 입력하여 주세요."
             type="password"
             id="password"
@@ -133,10 +135,9 @@ const Register = () => {
               required: true,
               minLength: { value: 5, message: "패스워드가 너무 짧습니다" },
               pattern: {
-                value:
-                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/,
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/,
                 message: "대문자,소문자,특수문자를 포함해주세요",
-              }
+              },
             })}
           />
           {/*비밀번호 관련 에러 모음*/}
@@ -153,15 +154,18 @@ const Register = () => {
               required: true,
               minLength: { value: 5, message: "검증 패스워드가 너무 짧습니다" },
               pattern: {
-                value:
-                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/,
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/,
                 message: "대문자,소문자,특수문자를 포함해주세요",
               },
             })}
             onKeyDown={(e) => e.key === "Tab" && formRef.current.click()}
           />
           {/*비밀번호 확인 관련 에러 모음*/}
-          <div style={{ color: "green" } /*👈 삭제할 예정*/}>{getValues("password") === getValues("confirmation_password")  && getValues("password") !== "" ? "비밀번호가 일치합니다" : ""}</div>
+          <div style={{ color: "green" } /*👈 삭제할 예정*/}>
+            {getValues("password") === getValues("confirmation_password") && getValues("password") !== ""
+              ? "비밀번호가 일치합니다"
+              : ""}
+          </div>
           <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.confirmation_password?.message}</div>
           <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.diffPassword?.message}</div>
         </div>
@@ -186,7 +190,7 @@ const Register = () => {
         <div>
           <label htmlFor="lastName">영문명: </label>
           <input
-             style={{ width: "50%" } /*👈 삭제할 예정*/}
+            style={{ width: "50%" } /*👈 삭제할 예정*/}
             placeholder="영문명[성]"
             type="text"
             id="lastName"
@@ -199,7 +203,7 @@ const Register = () => {
             })}
           />
           <input
-           style={{ width: "50%" } /*👈 삭제할 예정*/}
+            style={{ width: "50%" } /*👈 삭제할 예정*/}
             placeholder="영문명[이름]"
             type="text"
             {...register("firstName", {
@@ -238,7 +242,7 @@ const Register = () => {
             {...register("recommendCode")}
           />
         </div>
-        <button  ref={buttonRef}>회원가입</button>
+        <button ref={buttonRef}>회원가입</button>
         <br />
         <Link to="/">Home</Link>
         <br />
