@@ -7,6 +7,29 @@ import { v4 as uuidv4 } from "uuid";
 import { mailTemplate } from "../common/email/mailTemplate.js";
 import { sendMailer } from "../common/email/mailConfig.js";
 
+export const postUsers = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({
+            where: { email },
+        });
+
+        if (!user) {
+            return res.status(200).json({ message: "존재하는 계정이 없습니다" });
+        }
+
+        // const isValidPassword = await bcrypt.compare(password, user.password);
+
+        // if (!isValidPassword) {
+        //     return res.status(401).json({ message: "이메일이나 비밀번호가 틀렸습니다" });
+        // }
+
+        return res.json({ user });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const postJoin = async (req, res) => {
     const { country, firstName, lastName, password, name, email, verified, recommendCode, birthNumber } = req.body;
     try {
