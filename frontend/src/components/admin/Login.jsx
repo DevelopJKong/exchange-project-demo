@@ -18,15 +18,6 @@ const Login = () => {
   const onValid = async (data) => {
     try {
       const userData = await userRequest.post(`/users/login`, { ...data });
-
-      if (userData.data.message === "존재하는 계정이 없습니다") {
-        throw new Error("user");
-      }
-
-      if (!userData.data.verified) {
-        throw new Error("email");
-      }
-
       setLoginSuccess({
         currentUser: userData.data.email,
         token: userData.data.token,
@@ -35,23 +26,20 @@ const Login = () => {
         expire: Date.now(),
       });
     } catch (error) {
-      const { message } = error;
-      switch (message) {
+      const {
+        response: {
+          data: { message, status },
+        },
+      } = error;
+      switch (status) {
         case "user":
-          setError("userExist", {
-            message: "존재하는 계정이 없습니다",
-          });
+          setError("userExist", { message });
           break;
         case "email":
-          setError("verified", {
-            message: "이메일을 인증해주세요",
-          });
+          setError("wrongPassword", { message });
           break;
-
         default:
-          setError("extraError", {
-            message: "이메일이나 비밀번호가 틀렸습니다",
-          });
+          setError("extraServerError", { message });
           break;
       }
       setLoginFailure(loginFailure);
