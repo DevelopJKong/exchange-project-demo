@@ -1,8 +1,8 @@
-import { sequelize } from "../db.js";
 import SQ from "sequelize";
 import { Verification } from "./Verification.js";
 import bcrypt from "bcrypt";
-import { config } from "../config.js";
+import { sequelize } from "../db.js";
+import { config } from "../../common/config/config.js";
 const DataTypes = SQ.DataTypes;
 
 export const User = sequelize.define(
