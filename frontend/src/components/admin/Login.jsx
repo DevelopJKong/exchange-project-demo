@@ -32,10 +32,10 @@ const Login = () => {
         },
       } = error;
       switch (status) {
-        case "user":
+        case "userExist":
           setError("userExist", { message });
           break;
-        case "email":
+        case "wrongPassword":
           setError("wrongPassword", { message });
           break;
         default:
@@ -86,6 +86,7 @@ const Login = () => {
         <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.extraError?.message}</div>
         <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.verified?.message}</div>
         <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.userExist?.message}</div>
+        <div style={{ color: "red" } /*👈 삭제할 예정*/}>{errors?.wrongPassword?.message}</div>
       </form>
     </main>
   );

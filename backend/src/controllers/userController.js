@@ -20,11 +20,11 @@ export const postUsers = async (req, res) => {
       return res.status(200).json({ status: "noEmail", message: "존재하는 계정이 없습니다" });
     }
 
-    // const isValidPassword = await bcrypt.compare(password, user.password);
-
-    // if (!isValidPassword) {
-    //     return res.status(401).json({ message: "이메일이나 비밀번호가 틀렸습니다" });
-    // }
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    console.log(isValidPassword);
+    if (!isValidPassword) {
+      return res.status(200).json({ status: "wrongPassword", message: "이메일이나 비밀번호가 틀렸습니다" });
+    }
 
     return res.json({ user });
   } catch (error) {
@@ -94,7 +94,7 @@ export const postJoin = async (req, res) => {
 
 export const postLogin = async (req, res) => {
   const { email, password } = req.body;
-
+  console.log(email, password);
   try {
     const user = await User.findOne({ where: { email } });
     if (!user) {
