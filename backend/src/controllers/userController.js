@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
 import { Verification } from "../models/Verification.js";
-import { config } from "../config.js";
+import { config } from "../common/config/config.js";
 import { v4 as uuidv4 } from "uuid";
 import { mailTemplate } from "../common/email/mailTemplate.js";
 import { sendMailer } from "../common/email/mailConfig.js";
