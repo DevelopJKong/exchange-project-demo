@@ -1,5 +1,5 @@
-import { sequelize } from "../db.js";
 import SQ from "sequelize";
+import { sequelize } from "../db.js";
 const DataTypes = SQ.DataTypes;
 
 export const Verification = sequelize.define(

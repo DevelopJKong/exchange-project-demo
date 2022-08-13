@@ -1,8 +1,8 @@
-import { sequelize } from "../db.js";
 import SQ from "sequelize";
 import { Verification } from "./Verification.js";
-import { config } from "../config.js";
 import bcrypt from "bcrypt";
+import { sequelize } from "../db.js";
+import { config } from "../../common/config/config.js";
 const DataTypes = SQ.DataTypes;
 
 export const User = sequelize.define(
@@ -70,11 +70,8 @@ export const User = sequelize.define(
 
 User.beforeCreate(async (user, options) => {
   if (user.password) {
-    const hashedPassword = await bcrypt.hash(
-      user.password,
-      parseInt(config.bcrypt.saltRounds)
-    );
-    user.password = hashedPassword;
+    const hashPassword = await bcrypt.hash(user.password, parseInt(config.bcrypt.saltRounds));
+    user.password = hashPassword;
   }
 });
 

@@ -1,5 +1,5 @@
 import SQ from "sequelize";
-import { config } from "./config.js";
+import { config } from "../common/config/config.js";
 
 const { host, user, database, password, port } = config.db;
 
