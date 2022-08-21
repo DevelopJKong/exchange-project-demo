@@ -7,44 +7,20 @@ import { sendMailer } from "../common/email/mailConfig.js";
 import { User } from "../database/models/User.js";
 import { Verification } from "../database/models/Verification.js";
 
-export const postUsers = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    console.log(email);
-    const user = await User.findOne({
-      where: { email },
-    });
-    console.log(user);
-
-    if (!user) {
-      return res.status(200).json({ status: "noEmail", message: "존재하는 계정이 없습니다" });
-    }
-
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    console.log(isValidPassword);
-    if (!isValidPassword) {
-      return res.status(200).json({ status: "wrongPassword", message: "이메일이나 비밀번호가 틀렸습니다" });
-    }
-
-    return res.json({ user });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const postJoin = async (req, res) => {
   const {
     country,
-    firstName,
-    lastName,
+    email,
     password,
     confirmation_password,
     name,
-    email,
-    verified,
-    recommendCode,
+    lastName,
+    firstName,
     birthNumber,
+    recommendCode,
+    verified,
   } = req.body;
+  console.log(req.body);
   try {
     if (password !== confirmation_password) {
       return res.status(400).json({ status: "diffPassword", message: `비밀번호가 일치 하지 않습니다` });
@@ -52,6 +28,8 @@ export const postJoin = async (req, res) => {
     const exists = await User.findOne({
       where: { email },
     });
+    console.log(exists);
+
     if (exists) {
       return res.status(409).json({ status: "notExistEmail", message: `해당 이메일이 존재 합니다` });
     }
@@ -78,7 +56,7 @@ export const postJoin = async (req, res) => {
       recommendCode,
       birthNumber,
     });
-
+    console.log(user);
     await Verification.create({
       code: codeNum,
       user_id: user.id,
@@ -94,16 +72,19 @@ export const postJoin = async (req, res) => {
 
 export const postLogin = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
   try {
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      return res.status(400).json({ status: "notExistEmail", message: "존재하는 계정이 없습니다" });
+      return res.status(400).json({ status: "notExistEmail" });
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      return res.status(401).json({ status: "wrongPassword", message: "이메일이나 비밀번호가 틀렸습니다" });
+      return res.status(401).json({ status: "wrongPassword" });
+    }
+
+    if (!user.verified) {
+      return res.status(401).json({ status: "notVerified" });
     }
 
     const token = jwt.sign({ id: user.id }, config.jwt.secretKey, {
@@ -111,26 +92,42 @@ export const postLogin = async (req, res) => {
     });
     return res.status(200).json({ token, email, verified: user.verified });
   } catch (error) {
-    return res.status(400).json({ status: "extraServerError", message: `잠시후에 다시 시도해주세요` });
+    return res.status(400).json({ status: "extraServerError" });
   }
 };
 
 export const postCheck = async (req, res) => {
-  const { email, checkEmail } = req.body;
-  const user = await User.findOne({ where: { email } });
-  const verification = await Verification.findOne({
-    where: { user_id: user.id },
-  });
+  const { email, codeNum } = req.body;
+  console.log(req.body);
+  try {
+    const user = await User.findOne({ where: { email } });
 
-  if (checkEmail === verification.code) {
-    user.verified = true;
-    await user.save();
+    if (!user) {
+      return res.status(400).json({ status: "notExistUser" });
+    }
+
+    const verification = await Verification.findOne({
+      where: { user_id: user.id },
+    });
+    console.log(verification);
+
+    if (!verification) {
+      return res.status(400).json({ status: "notVerified" });
+    }
+    console.log(codeNum);
+    console.log(verification.code);
+
+    if (codeNum === verification.code) {
+      user.verified = true;
+      await user.save();
+    }
+    return res.status(200).json({ message: "가입이 완료 되었습니다" });
+  } catch (error) {
+    return res.status(400).json({ status: "extraServerError" });
   }
-  return res.redirect(config.frontend.url);
 };
 
 export const postEmailCheck = async (req, res) => {
-  console.log(req);
   const { email } = req.body;
   try {
     if (!email.includes(".com")) {

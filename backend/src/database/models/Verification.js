@@ -14,7 +14,7 @@ export const Verification = sequelize.define(
         code: {
             type: DataTypes.STRING(128),
             allowNull: false,
-        },
+        },  
         user_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
